@@ -2,4 +2,4 @@
 
 Participants : LAFHAJ Ethan "O-RA-CL-E", FLOC'H Maël "MaelFH", JOURNEE Gabriel "Rizki" et QUILLOT Alexis "Haruko".
 
-![Plan du magasin](images/plan.png)
+![Plan du magasin](images/plan.jpg)
