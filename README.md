@@ -1,1 +1,1 @@
-# sae_graphes
+# SAÉ Graphes - IHM
