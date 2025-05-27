@@ -1,6 +1,6 @@
 # SAÉ Graphes - IHM
 
-## *Participants : LAFHAJ Ethan "O-RA-CL-E", FLOC'H Maël "MaelFH", JOURNEE Gabriel "Bob le bricoleur" et QUILLOT Alexis "Haruko".*
+## *Participants : LAFHAJ Ethan "O-RA-CL-E", FLOC'H Maël "MaelFH", JOURNEE Gabriel "BobTheBuilder" et QUILLOT Alexis "Haruko".*
 
 **Rappel du projet**
 
