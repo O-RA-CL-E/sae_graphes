@@ -1,6 +1,0 @@
-[
-  {"id": 1, "name": "Lait", "category": "Frais"},
-  {"id": 2, "name": "Pain", "category": "Boulangerie"},
-  {"id": 3, "name": "Pâtes", "category": "Epicerie"},
-  ...
-]
