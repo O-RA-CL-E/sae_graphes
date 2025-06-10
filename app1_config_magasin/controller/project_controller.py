@@ -14,7 +14,7 @@ class ProjectView(QWidget):
         self.author_input = QLineEdit()
         self.address_input = QLineEdit()
 
-        self.create_btn = QPushButton("CrÃ©er projet")
+        self.create_btn = QPushButton("Creation projet")
         self.load_img_btn = QPushButton("Charger plan")
         self.image_label = QLabel("Aucune image")
 
