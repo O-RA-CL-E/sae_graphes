@@ -6,7 +6,7 @@ from view.project_view import ProjectView
 from controller.project_controller import ProjectController
 
 def ask_password():
-    correct_password = "admin123"
+    correct_password = "root"
     password, ok = QInputDialog.getText(None, "Accès sécurisé", "Mot de passe :", echo=QInputDialog.Password)
     if not ok or password != correct_password:
         QMessageBox.critical(None, "Erreur", "Mot de passe incorrect. Fermeture.")
