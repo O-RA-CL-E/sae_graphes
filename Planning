@@ -6,8 +6,8 @@
 - Définition architecture MVC
 - Création du dépôt GitHub
 - Organisation du dépôt (app1, app2, data…)
-- Maquettes brutes sur papier ou draw.io
-- Choix technos (PyQt5 ou tkinter)
+- Maquettes brutes sur papier 
+- Choix technos PyQt5 
 
 ## Jour 2 – App 1 - Base
 - Création formulaire de projet (nom, auteur…)
