@@ -1,17 +1,15 @@
-pycache/
-*.pyc
-*.pyo
-*.pyd
 venv/
-.env/
-env/
-.venv/
+
+# Environnement Python
+venv/
+__pycache__/
+*.pyc
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Sauvegardes éditeur
 *.swp
 *.swo
 *.bak
-*.tmp
-*.log
-.vscode/
-.cache/
-.tox/
-.pytest_cache/
