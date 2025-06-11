@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
+from view.project_view import ProjectView
+from model.project_model import ProjectModel
 
 class ProjectController:
     def __init__(self, model, view):
@@ -16,19 +18,21 @@ class ProjectController:
 
         self.model.set_project_info(name, author, address)
         self.model.set_grid_parameters(
-        self.view.grid_size_input.value(),
-        self.view.origin_x_input.value(),
-        self.view.origin_y_input.value()
-    )
+            self.view.grid_size_input.value(),
+            self.view.origin_x_input.value(),
+            self.view.origin_y_input.value()
+        )
 
         self.view.afficher_message("Projet enregistré avec succès.")
 
-def handle_load_image(self):
-    filename, _ = QFileDialog.getOpenFileName(self.view, "Charger une image", "", "Images (*.png *.jpg *.bmp)")
-    if filename:
-        self.model.set_image_path(filename)
-        self.view.display_image_with_grid(
-            filename,
-            self.model.grid_size,
-            self.model.grid_origin
+    def handle_load_image(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            self.view, "Charger une image", "", "Images (*.png *.jpg *.bmp)"
         )
+        if filename:
+            self.model.set_image_path(filename)
+            self.view.display_image_with_grid(
+                filename,
+                self.model.grid_size,
+                self.model.grid_origin
+            )

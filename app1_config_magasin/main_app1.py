@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QInputDialog, QMessageBox, QLineEdit
 from PyQt5.QtCore import Qt
 import sys
 
@@ -8,10 +8,11 @@ from controller.project_controller import ProjectController
 
 def ask_password():
     correct_password = "root"
-    password, ok = QInputDialog.getText(None, "Accès sécurisé", "Mot de passe :", echo=Qt.Password)
+    password, ok = QInputDialog.getText(None, "Accès sécurisé", "Mot de passe :", echo=QLineEdit.Password)
     if not ok or password != correct_password:
         QMessageBox.critical(None, "Erreur", "Mot de passe incorrect. Fermeture.")
         sys.exit()
+
 
 
 def main():
