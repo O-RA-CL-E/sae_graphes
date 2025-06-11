@@ -1,13 +1,10 @@
-from PyQt5.QtWidgets import (
-    QWidget, QLabel, QPushButton, QLineEdit, QFileDialog, QVBoxLayout, 
-    QHBoxLayout, QSpinBox, QGridLayout, QMessageBox, QComboBox
-)
-from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
-from PyQt5.QtCore import Qt
-import json, os
-from PyQt5.QtGui import QImage
-from datetime import datetime
+import json
+import os
 import shutil
+from datetime import datetime
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont, QImage
+from PyQt5.QtCore import Qt
 
 class ProjectController:
     def __init__(self, model, view):
@@ -47,7 +44,6 @@ class ProjectController:
         project_dir = os.path.join("projets", name)
         os.makedirs(project_dir, exist_ok=True)
 
-        # Copier l'image dans le dossier du projet
         if self.model.image_path:
             image_filename = os.path.basename(self.model.image_path)
             destination_path = os.path.join(project_dir, image_filename)
@@ -57,7 +53,6 @@ class ProjectController:
         else:
             relative_image_path = ""
 
-        # Demander le nom du fichier de sauvegarde
         file_dialog = QFileDialog(self.view)
         file_dialog.setAcceptMode(QFileDialog.AcceptSave)
         file_dialog.setDefaultSuffix("json")
@@ -69,6 +64,7 @@ class ProjectController:
         else:
             return
 
+        self.model.project_file = project_file
         data = {
             "project_name": self.model.project_name,
             "author": self.model.author,
@@ -85,6 +81,34 @@ class ProjectController:
             json.dump(data, f, indent=4)
         self.view.afficher_message(f"Projet sauvegardé dans {project_file}")
 
+    def handle_place_product(self, col, row):
+        label = self.view.product_selector.currentText()
+        self.model.add_product(label, col, row)
+        self.redraw_grid()
+        self.auto_save_project()
+
+    def auto_save_project(self):
+        if not self.model.project_file:
+            return
+        name = self.view.project_name_input.text()
+        relative_image_path = self.model.image_path
+        if os.path.isabs(self.model.image_path):
+            relative_image_path = os.path.relpath(self.model.image_path, "projets")
+        data = {
+            "project_name": self.model.project_name,
+            "author": self.model.author,
+            "address": self.model.address,
+            "creation_date": self.model.creation_date,
+            "image_path": relative_image_path,
+            "grid_size": self.model.grid_size,
+            "grid_origin": self.model.grid_origin,
+            "nb_cols": self.view.nb_cols_input.value(),
+            "nb_rows": self.view.nb_rows_input.value(),
+            "products": self.model.get_products()
+        }
+        with open(self.model.project_file, "w") as f:
+            json.dump(data, f, indent=4)
+
     def handle_load_project(self):
         try:
             filename, _ = QFileDialog.getOpenFileName(self.view, "Charger un projet", "projets/", "Fichiers projet (*.json)")
@@ -92,6 +116,7 @@ class ProjectController:
                 return
             with open(filename, "r") as f:
                 data = json.load(f)
+
             self.view.project_name_input.setText(data.get("project_name", ""))
             self.view.author_input.setText(data.get("author", ""))
             self.view.address_input.setText(data.get("address", ""))
@@ -110,6 +135,7 @@ class ProjectController:
                 self.view.afficher_message("Image non trouvée : " + full_image_path)
 
             self.model.products = data.get("products", [])
+            self.model.project_file = filename
             self.redraw_grid()
             self.view.afficher_message("Projet chargé avec succès.")
         except Exception as e:
@@ -122,42 +148,12 @@ class ProjectController:
 
         image = QImage(self.model.image_path)
         width, height = image.width(), image.height()
-        block_size = 20
-        blocks_x = width // block_size
-        blocks_y = height // block_size
-        bright_blocks = 0
-        total_blocks = blocks_x * blocks_y
 
-        for bx in range(blocks_x):
-            for by in range(blocks_y):
-                sum_luminance = 0
-                for dx in range(block_size):
-                    for dy in range(block_size):
-                        x = bx * block_size + dx
-                        y = by * block_size + dy
-                        if x < width and y < height:
-                            pixel = image.pixel(x, y)
-                            r = (pixel >> 16) & 0xFF
-                            g = (pixel >> 8) & 0xFF
-                            b = pixel & 0xFF
-                            luminance = (r + g + b) / 3
-                            sum_luminance += luminance
-
-                avg_luminance = sum_luminance / (block_size * block_size)
-                if avg_luminance > 220:
-                    bright_blocks += 1
-
-        white_ratio = bright_blocks / total_blocks
-        optimal_cols = max(5, int(width / (30 + white_ratio * 70)))
-        optimal_rows = max(5, int(height / (30 + white_ratio * 70)))
+        optimal_cols = max(5, width // 50)
+        optimal_rows = max(5, height // 50)
 
         self.view.nb_cols_input.setValue(optimal_cols)
         self.view.nb_rows_input.setValue(optimal_rows)
-        self.redraw_grid()
-
-    def handle_place_product(self, col, row):
-        label = self.view.product_selector.currentText()
-        self.model.add_product(label, col, row)
         self.redraw_grid()
 
     def redraw_grid(self):
