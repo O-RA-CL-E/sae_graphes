@@ -1,5 +1,4 @@
-import json
-import os
+import json, os
 from PyQt5.QtGui import QImage
 
 class ProjectModel:
@@ -24,6 +23,7 @@ class ProjectModel:
         self.grid_origin = (origin_x, origin_y)
 
     def save_to_file(self, filepath="projets/projet.json"):
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         data = {
             "project_name": self.project_name,
             "author": self.author,
@@ -32,40 +32,14 @@ class ProjectModel:
             "grid_size": self.grid_size,
             "grid_origin": self.grid_origin
         }
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, "w") as f:
             json.dump(data, f, indent=4)
 
     def estimate_grid_from_image(self):
         if not self.image_path:
-            return 20, 15  # valeur par défaut
-        img = QImage(self.image_path)
-        width = img.width()
-        height = img.height()
-
-        best_cols = 20
-        best_rows = 15
-        best_score = 0
-
-        for cols in range(10, 41, 5):
-            for rows in range(10, 31, 5):
-                grid_w = width // cols
-                grid_h = height // rows
-                score = 0
-                for y in range(0, height, grid_h):
-                    for x in range(0, width, grid_w):
-                        count = 0
-                        for i in range(0, grid_w, max(1, grid_w//5)):
-                            for j in range(0, grid_h, max(1, grid_h//5)):
-                                if x + i < width and y + j < height:
-                                    pixel = img.pixelColor(x + i, y + j)
-                                    brightness = (pixel.red() + pixel.green() + pixel.blue()) / 3
-                                    if brightness > 220:
-                                        count += 1
-                        score += count
-                if score > best_score:
-                    best_score = score
-                    best_cols = cols
-                    best_rows = rows
-
-        return best_cols, best_rows
+            return 20, 15
+        image = QImage(self.image_path)
+        width, height = image.width(), image.height()
+        optimal_cols = max(1, width // 50)
+        optimal_rows = max(1, height // 50)
+        return optimal_cols, optimal_rows
