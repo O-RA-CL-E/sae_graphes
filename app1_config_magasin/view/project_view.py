@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QLineEdit, QFileDialog, QVBoxLayout, QHBoxLayout, QSpinBox, QGridLayout, QMessageBox)
+from PyQt5.QtWidgets import (
+    QWidget, QLabel, QPushButton, QLineEdit, QFileDialog, QVBoxLayout, QHBoxLayout, QSpinBox, QGridLayout, QMessageBox, QComboBox
+)
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
 from PyQt5.QtCore import Qt
 
@@ -6,6 +8,7 @@ class ProjectView(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Configuration du magasin")
+
         self.project_name_input = QLineEdit()
         self.author_input = QLineEdit()
         self.address_input = QLineEdit()
@@ -19,6 +22,10 @@ class ProjectView(QWidget):
         self.origin_x_input = QSpinBox(); self.origin_y_input = QSpinBox()
         self.nb_cols_input = QSpinBox(); self.nb_cols_input.setRange(1,100); self.nb_cols_input.setValue(20)
         self.nb_rows_input = QSpinBox(); self.nb_rows_input.setRange(1,100); self.nb_rows_input.setValue(15)
+        self.product_selector = QComboBox()
+        self.product_selector.addItems(["Pain", "Lait", "Riz", "Tomates", "Pâtes"])
+        self.parent_controller = None
+        self.image_label.mousePressEvent = self.handle_click_on_image
         self.init_ui()
 
     def init_ui(self):
@@ -44,6 +51,8 @@ class ProjectView(QWidget):
         grid_settings.addWidget(QLabel("Colonnes :")); grid_settings.addWidget(self.nb_cols_input)
         grid_settings.addWidget(QLabel("Lignes :")); grid_settings.addWidget(self.nb_rows_input)
         layout.addLayout(grid_settings)
+        layout.addWidget(QLabel("Produit à placer :"))
+        layout.addWidget(self.product_selector)
         self.setLayout(layout)
 
     def afficher_message(self, texte):
@@ -69,3 +78,22 @@ class ProjectView(QWidget):
         painter.end()
         self.image_label.setPixmap(scaled_pixmap)
         self.image_label.setScaledContents(True)
+
+    def handle_click_on_image(self, event):
+        if not self.image_label.pixmap():
+            return
+
+        pos = event.pos()
+        x, y = pos.x(), pos.y()
+        nb_cols = self.nb_cols_input.value()
+        nb_rows = self.nb_rows_input.value()
+        pixmap = self.image_label.pixmap()
+        width = pixmap.width()
+        height = pixmap.height()
+        grid_w = width // nb_cols
+        grid_h = height // nb_rows
+        col = x // grid_w
+        row = y // grid_h
+
+        if self.parent_controller:
+            self.parent_controller.handle_place_product(col, row)

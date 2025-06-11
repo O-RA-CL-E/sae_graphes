@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
+from PyQt5.QtCore import Qt
 import json, os
 
 class ProjectController:
@@ -10,6 +12,7 @@ class ProjectController:
         self.view.save_btn.clicked.connect(self.handle_save_project)
         self.view.load_project_btn.clicked.connect(self.handle_load_project)
         self.view.auto_grid_btn.clicked.connect(self.handle_auto_grid)
+        self.view.parent_controller = self
 
     def handle_create_project(self):
         name = self.view.project_name_input.text()
@@ -32,15 +35,7 @@ class ProjectController:
             self.view.display_image_with_grid(filename, nb_cols, nb_rows)
 
     def handle_save_project(self):
-        name = self.view.project_name_input.text()
-        author = self.view.author_input.text()
-        address = self.view.address_input.text()
-        self.model.set_project_info(name, author, address)
-        self.model.set_grid_parameters(
-            self.view.grid_size_input.value(),
-            self.view.origin_x_input.value(),
-            self.view.origin_y_input.value()
-        )
+        self.handle_create_project()
         self.model.save_to_file()
         self.view.afficher_message("Projet sauvegardé dans projets/projet.json")
 
@@ -75,3 +70,24 @@ class ProjectController:
         self.view.nb_cols_input.setValue(optimal_cols)
         self.view.nb_rows_input.setValue(optimal_rows)
         self.view.display_image_with_grid(self.model.image_path, optimal_cols, optimal_rows)
+
+    def handle_place_product(self, col, row):
+        label = self.view.product_selector.currentText()
+        nb_cols = self.view.nb_cols_input.value()
+        nb_rows = self.view.nb_rows_input.value()
+        pixmap = QPixmap(self.model.image_path)
+        pixmap = pixmap.scaled(1000, 800, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        width = pixmap.width()
+        height = pixmap.height()
+        grid_w = width // nb_cols
+        grid_h = height // nb_rows
+        x = col * grid_w
+        y = row * grid_h
+        painter = QPainter(pixmap)
+        pen = QPen(Qt.red); pen.setWidth(2); painter.setPen(pen)
+        font = QFont(); font.setPointSize(10); painter.setFont(font)
+        painter.drawRect(x, y, grid_w, grid_h)
+        painter.drawText(x + 4, y + 16, label)
+        painter.end()
+        self.view.image_label.setPixmap(pixmap)
+        self.model.add_product(label, col, row)
