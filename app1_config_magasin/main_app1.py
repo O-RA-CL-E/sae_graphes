@@ -7,10 +7,11 @@ from controller.project_controller import ProjectController
 
 def ask_password():
     correct_password = "root"
-    password, ok = QInputDialog.getText(None, "Accès sécurisé", "Mot de passe :", echo=QInputDialog.Password)
+    password, ok = QInputDialog.getText(None, "Accès sécurisé", "Mot de passe :", echo=Qt.Password)
     if not ok or password != correct_password:
         QMessageBox.critical(None, "Erreur", "Mot de passe incorrect. Fermeture.")
         sys.exit()
+
 
 def main():
     app = QApplication(sys.argv)
