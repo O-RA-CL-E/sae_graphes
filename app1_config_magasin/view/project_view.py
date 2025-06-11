@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
 from PyQt5.QtCore import Qt
+import os
 
 class ProjectView(QWidget):
     def __init__(self):
@@ -23,10 +24,21 @@ class ProjectView(QWidget):
         self.nb_cols_input = QSpinBox(); self.nb_cols_input.setRange(1,100); self.nb_cols_input.setValue(20)
         self.nb_rows_input = QSpinBox(); self.nb_rows_input.setRange(1,100); self.nb_rows_input.setValue(15)
         self.product_selector = QComboBox()
-        self.product_selector.addItems(["Pain", "Lait", "Riz", "Tomates", "Pâtes"])
+        self.load_products_from_file("data/produits.txt")
         self.parent_controller = None
         self.image_label.mousePressEvent = self.handle_click_on_image
         self.init_ui()
+
+    def load_products_from_file(self, filepath):
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("["):
+                        continue
+                    self.product_selector.addItem(line)
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Erreur", f"Fichier produits introuvable : {filepath}")
 
     def init_ui(self):
         layout = QVBoxLayout()
