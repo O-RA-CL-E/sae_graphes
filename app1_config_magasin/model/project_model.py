@@ -1,5 +1,5 @@
 class ProjectModel:
-    def init(self):
+    def __init__(self):
         self.project_name = ""
         self.author = ""
         self.address = ""
