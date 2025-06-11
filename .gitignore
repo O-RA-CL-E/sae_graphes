@@ -3,6 +3,8 @@ pycache/
 *.pyo
 *.pyd
 venv/
+debian_venv/
+.debian_venv/
 .env/
 env/
 .venv/
