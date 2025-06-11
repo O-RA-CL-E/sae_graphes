@@ -21,7 +21,7 @@ class ProjectController:
         self.view.origin_y_input.value()
     )
 
-    self.view.afficher_message("Projet enregistré avec succès.")
+        self.view.afficher_message("Projet enregistré avec succès.")
 
 def handle_load_image(self):
     filename, _ = QFileDialog.getOpenFileName(self.view, "Charger une image", "", "Images (*.png *.jpg *.bmp)")
