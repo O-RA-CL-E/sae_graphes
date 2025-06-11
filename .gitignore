@@ -1,15 +1,18 @@
-venv/
-
-# Environnement Python
-venv/
+# Fichiers système
 __pycache__/
 *.pyc
+*.pyo
 
-# Fichiers système
+# Environnement virtuel
+venv/
+.env/
+
+# Fichiers projets générés
+projets/
+
+# Fichiers temporaires d'OS
 .DS_Store
 Thumbs.db
 
-# Sauvegardes éditeur
-*.swp
-*.swo
-*.bak
+# Fichiers logs éventuels
+*.log
