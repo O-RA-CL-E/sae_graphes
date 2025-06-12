@@ -1,10 +1,8 @@
-import json
-import os
-import shutil
-from datetime import datetime
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont, QImage
 from PyQt5.QtCore import Qt
+import json, os, shutil
+from datetime import datetime
 
 class ProjectController:
     def __init__(self, model, view):
@@ -12,9 +10,9 @@ class ProjectController:
         self.view = view
         self.view.create_btn.clicked.connect(self.handle_create_project)
         self.view.load_img_btn.clicked.connect(self.handle_load_image)
+        self.view.auto_grid_btn.clicked.connect(self.handle_auto_grid)
         self.view.save_btn.clicked.connect(self.handle_save_project)
         self.view.load_project_btn.clicked.connect(self.handle_load_project)
-        self.view.auto_grid_btn.clicked.connect(self.handle_auto_grid)
         self.view.delete_btn.clicked.connect(self.handle_delete_project)
         self.view.parent_controller = self
 
@@ -30,7 +28,7 @@ class ProjectController:
             self.view.origin_x_input.value(),
             self.view.origin_y_input.value()
         )
-        self.view.afficher_message("Projet enregistré avec succès.")
+        self.view.afficher_message("Projet enregistré en mémoire.")
 
     def handle_load_image(self):
         filename, _ = QFileDialog.getOpenFileName(self.view, "Charger une image", "", "Images (*.png *.jpg *.bmp)")
@@ -64,7 +62,6 @@ class ProjectController:
         else:
             return
 
-        self.model.project_file = project_file
         data = {
             "project_name": self.model.project_name,
             "author": self.model.author,
@@ -81,34 +78,6 @@ class ProjectController:
             json.dump(data, f, indent=4)
         self.view.afficher_message(f"Projet sauvegardé dans {project_file}")
 
-    def handle_place_product(self, col, row):
-        label = self.view.product_selector.currentText()
-        self.model.add_product(label, col, row)
-        self.redraw_grid()
-        self.auto_save_project()
-
-    def auto_save_project(self):
-        if not self.model.project_file:
-            return
-        name = self.view.project_name_input.text()
-        relative_image_path = self.model.image_path
-        if os.path.isabs(self.model.image_path):
-            relative_image_path = os.path.relpath(self.model.image_path, "projets")
-        data = {
-            "project_name": self.model.project_name,
-            "author": self.model.author,
-            "address": self.model.address,
-            "creation_date": self.model.creation_date,
-            "image_path": relative_image_path,
-            "grid_size": self.model.grid_size,
-            "grid_origin": self.model.grid_origin,
-            "nb_cols": self.view.nb_cols_input.value(),
-            "nb_rows": self.view.nb_rows_input.value(),
-            "products": self.model.get_products()
-        }
-        with open(self.model.project_file, "w") as f:
-            json.dump(data, f, indent=4)
-
     def handle_load_project(self):
         try:
             filename, _ = QFileDialog.getOpenFileName(self.view, "Charger un projet", "projets/", "Fichiers projet (*.json)")
@@ -116,7 +85,6 @@ class ProjectController:
                 return
             with open(filename, "r") as f:
                 data = json.load(f)
-
             self.view.project_name_input.setText(data.get("project_name", ""))
             self.view.author_input.setText(data.get("author", ""))
             self.view.address_input.setText(data.get("address", ""))
@@ -135,7 +103,6 @@ class ProjectController:
                 self.view.afficher_message("Image non trouvée : " + full_image_path)
 
             self.model.products = data.get("products", [])
-            self.model.project_file = filename
             self.redraw_grid()
             self.view.afficher_message("Projet chargé avec succès.")
         except Exception as e:
@@ -148,12 +115,41 @@ class ProjectController:
 
         image = QImage(self.model.image_path)
         width, height = image.width(), image.height()
+        block_size = 20
+        blocks_x = width // block_size
+        blocks_y = height // block_size
+        bright_blocks = 0
+        total_blocks = blocks_x * blocks_y
 
-        optimal_cols = max(5, width // 50)
-        optimal_rows = max(5, height // 50)
+        for bx in range(blocks_x):
+            for by in range(blocks_y):
+                sum_luminance = 0
+                for dx in range(block_size):
+                    for dy in range(block_size):
+                        x = bx * block_size + dx
+                        y = by * block_size + dy
+                        if x < width and y < height:
+                            pixel = image.pixel(x, y)
+                            r = (pixel >> 16) & 0xFF
+                            g = (pixel >> 8) & 0xFF
+                            b = pixel & 0xFF
+                            luminance = (r + g + b) / 3
+                            sum_luminance += luminance
+                avg_luminance = sum_luminance / (block_size * block_size)
+                if avg_luminance > 220:
+                    bright_blocks += 1
+
+        white_ratio = bright_blocks / total_blocks
+        optimal_cols = max(5, int(width / (30 + white_ratio * 70)))
+        optimal_rows = max(5, int(height / (30 + white_ratio * 70)))
 
         self.view.nb_cols_input.setValue(optimal_cols)
         self.view.nb_rows_input.setValue(optimal_rows)
+        self.redraw_grid()
+
+    def handle_place_product(self, col, row):
+        label = self.view.product_selector.currentText()
+        self.model.add_product(label, col, row)
         self.redraw_grid()
 
     def redraw_grid(self):
@@ -161,42 +157,48 @@ class ProjectController:
             return
         nb_cols = self.view.nb_cols_input.value()
         nb_rows = self.view.nb_rows_input.value()
-        max_width, max_height = 1000, 800
+
         original_pixmap = QPixmap(self.model.image_path)
-        scaled_pixmap = original_pixmap.scaled(max_width, max_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        width, height = scaled_pixmap.width(), scaled_pixmap.height()
-        grid_width = width // nb_cols
-        grid_height = height // nb_rows
+        self.view.resize_image_label(original_pixmap)
+        scaled_pixmap = self.view.image_label.pixmap()
+
+        width = scaled_pixmap.width()
+        height = scaled_pixmap.height()
+        grid_width = width / nb_cols
+        grid_height = height / nb_rows
 
         painter = QPainter(scaled_pixmap)
-        pen = QPen(Qt.red)
-        pen.setWidth(1)
+        pen = QPen(Qt.red, 1)
         painter.setPen(pen)
         font = QFont()
         font.setPointSize(8)
         painter.setFont(font)
 
-        for x in range(0, width, grid_width):
+        for col in range(nb_cols+1):
+            x = int(col * grid_width)
             painter.drawLine(x, 0, x, height)
-        for y in range(0, height, grid_height):
+        for row in range(nb_rows+1):
+            y = int(row * grid_height)
             painter.drawLine(0, y, width, y)
 
         for product in self.model.get_products():
-            px = product["col"] * grid_width
-            py = product["row"] * grid_height
+            px = int(product["col"] * grid_width)
+            py = int(product["row"] * grid_height)
             painter.setPen(QPen(Qt.blue, 2))
-            painter.drawRect(px, py, grid_width, grid_height)
+            painter.drawRect(px, py, int(grid_width), int(grid_height))
             painter.drawText(px + 5, py + 15, product["label"])
 
         painter.end()
         self.view.image_label.setPixmap(scaled_pixmap)
-        self.view.image_label.setScaledContents(True)
 
     def handle_delete_project(self):
         directory = QFileDialog.getExistingDirectory(self.view, "Sélectionner le dossier du projet à supprimer", "projets/")
         if not directory:
             return
-        confirmation = QMessageBox.question(self.view, "Confirmation", f"Supprimer le projet '{directory}' ?", QMessageBox.Yes | QMessageBox.No)
+        confirmation = QMessageBox.question(
+            self.view, "Confirmation", f"Supprimer le projet '{directory}' ?",
+            QMessageBox.Yes | QMessageBox.No
+        )
         if confirmation == QMessageBox.Yes:
             shutil.rmtree(directory)
             self.view.afficher_message("Projet supprimé avec succès.")

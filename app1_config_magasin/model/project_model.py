@@ -10,7 +10,6 @@ class ProjectModel:
         self.grid_size = 50
         self.grid_origin = (0, 0)
         self.products = []
-        self.project_file = None
 
     def set_project_info(self, name, author, address):
         self.project_name = name
