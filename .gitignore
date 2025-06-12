@@ -5,6 +5,8 @@ __pycache__/
 
 # Environnement virtuel
 venv/
+debian_venv/
+.debian_venv/
 .env/
 
 # Fichiers projets générés
