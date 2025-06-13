@@ -1,20 +1,31 @@
-# Fichiers système
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 
-# Environnement virtuel
+# Virtual env
 venv/
-debian_venv/
-.debian_venv/
-.env/
+env/
+ENV/
+.venv/
 
-# Fichiers projets générés
-projets/
+# VSCode
+.vscode/
 
-# Fichiers temporaires d'OS
+# MacOS
 .DS_Store
-Thumbs.db
 
-# Fichiers logs éventuels
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# PyCharm
+.idea/
+
+# Log files
 *.log
+
+# Cache
+.cache/
