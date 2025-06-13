@@ -1,47 +1,99 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QListWidget, QVBoxLayout, QHBoxLayout, QFileDialog
-from PyQt5.QtGui import QPixmap, QPainter, QPen
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QListWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QFormLayout, QFileDialog
+from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
 from PyQt5.QtCore import Qt
 
 class MainView(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Parcours Courses")
+        self.setStyleSheet("""
+    QWidget { 
+        font-family: 'Segoe UI'; 
+        font-size: 12pt; 
+        background-color: #1c1c28; 
+        color: #E0E0E0;  
+    }
+    QGroupBox { 
+        background-color: #29293d; 
+        border: 1px solid #3c3c55; 
+        border-radius: 12px; 
+        padding: 15px; 
+        margin-top: 10px;
+    }
+                       
+        QGroupBox::title {
+        subcontrol-origin: margin;
+        subcontrol-position: top center;
+        padding: 0 10px;
+        font-size: 13pt;
+        font-weight: 600;
+        color: #f0f0f0;
+    }
+    QPushButton { 
+        background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4a4a70, stop:1 #3b3b60);
+        border: 1px solid #5a5a80; 
+        border-radius: 10px; 
+        padding: 10px 15px;
+        color: #ffffff;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    QPushButton:hover { 
+        background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #606090, stop:1 #505080);
+    }
+    QLineEdit, QSpinBox, QComboBox { 
+        background-color: #303048; 
+        border: 1px solid #505070; 
+        border-radius: 8px; 
+        padding: 6px 10px; 
+        color: #ffffff;
+        selection-background-color: #606080;
+        selection-color: #ffffff;
+    }
+    QLabel { 
+        color: #f0f0f0; 
+        background: transparent;
+    }
+    QFormLayout > QLabel { 
+        color: #f0f0f0;
+        background: transparent;
+    }
+""")
 
-        # Main horizontal layout
         main_layout = QHBoxLayout()
 
-        # Left vertical layout: load button, plan, products list, buttons
+        left_group = QGroupBox("Produits disponibles")
         left_layout = QVBoxLayout()
         self.load_btn = QPushButton("Charger un magasin")
-        self.load_btn.setStyleSheet("font-size: 14px; padding: 8px;")
+        self.load_btn.setFixedHeight(40)
+        self.load_btn.setFont(QFont("Segoe UI", 11))
         self.plan_label = QLabel("Plan du magasin")
         self.plan_label.setAlignment(Qt.AlignCenter)
         self.products_list = QListWidget()
         self.products_list.setStyleSheet("font-size: 13px;")
-        self.generate_random_list_btn = QPushButton("Générer une liste de courses aléatoire")
-        self.generate_random_list_btn.setStyleSheet("font-size: 14px; padding: 8px;")
-        self.shortest_path_btn = QPushButton("Tracer le chemin le plus court")
-        self.shortest_path_btn.setStyleSheet("font-size: 14px; padding: 8px;")
-
         left_layout.addWidget(self.load_btn)
         left_layout.addWidget(self.plan_label)
-        left_layout.addWidget(QLabel("Produits disponibles"))
         left_layout.addWidget(self.products_list)
-        left_layout.addWidget(self.generate_random_list_btn)
-        left_layout.addWidget(self.shortest_path_btn)
+        left_group.setLayout(left_layout)
 
-        # Right vertical layout: shopping list
+        right_group = QGroupBox("Liste de courses")
         right_layout = QVBoxLayout()
-        right_layout.addWidget(QLabel("Liste de courses"))
+        self.generate_random_list_btn = QPushButton("Générer une liste de courses aléatoire")
+        self.generate_random_list_btn.setFixedHeight(40)
+        self.generate_random_list_btn.setFont(QFont("Segoe UI", 11))
+        self.shortest_path_btn = QPushButton("Tracer le chemin le plus court")
+        self.shortest_path_btn.setFixedHeight(40)
+        self.shortest_path_btn.setFont(QFont("Segoe UI", 11))
         self.courses_list = QListWidget()
         self.courses_list.setStyleSheet("font-size: 13px;")
+        right_layout.addWidget(self.generate_random_list_btn)
+        right_layout.addWidget(self.shortest_path_btn)
         right_layout.addWidget(self.courses_list)
+        right_group.setLayout(right_layout)
 
-        # Add left and right layouts to main layout
-        main_layout.addLayout(left_layout, 3)
-        main_layout.addLayout(right_layout, 1)
+        main_layout.addWidget(left_group, 3)
+        main_layout.addWidget(right_group, 1)
 
-        # Set margins and spacing
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(15)
         left_layout.setSpacing(10)
