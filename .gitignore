@@ -3,29 +3,31 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Virtual env
-venv/
-env/
-ENV/
+*.egg-info/
+dist/
+build/
+.env
 .venv/
+venv/
+ENV/
+env/
+
+# PyQt5 designer files (si jamais utilisés)
+*.ui
+*.qrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Projets sauvegardés (optionnel si tu ne veux pas versionner les projets sauvegardés)
+projets/
+
+# JetBrains (PyCharm)
+.idea/
 
 # VSCode
 .vscode/
-
-# MacOS
-.DS_Store
-
-# System files
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# PyCharm
-.idea/
-
-# Log files
-*.log
-
-# Cache
-.cache/
