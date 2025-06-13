@@ -97,6 +97,9 @@ Mot de passe au démarrage : `root`
 ```
 sae_graphes/
 │
+├── PLANS/plan.jpg
+├── PRODUITS/produits.txt
+├── PROJETS/
 ├── app1_config_magasin/
 │   ├── main_app1.py
 │   ├── model/
@@ -115,13 +118,11 @@ sae_graphes/
 │   └── controller/
 │       └── MainController.py
 │
-├── data/PRODUITS/produits.txt
-├── projets/
-├── documentation/
-├── README.md
-├── PLANNING.md
-├── requirements.txt
-└── .gitignore
+├── doc/
+|   ├── notice.md
+|   └── planning.md
+├── .gitignore
+└── README.md
 ```
 
 ---
