@@ -50,3 +50,38 @@ sae_graphes/
 ├── PLANNING.md
 ├── requirements.txt
 └── .gitignore
+
+
+🎯 Fonctionnalités principales :
+📝 Création d’un projet
+Saisissez le nom du projet, l’auteur et l’adresse.
+
+La date de création est automatiquement ajoutée.
+
+Définissez la taille de la grille et son origine.
+
+🖼️ Chargement d'une image de plan
+Cliquez sur "Charger une image" pour importer une image de fond (plan du magasin).
+
+Les formats pris en charge sont : .png, .jpg, .bmp.
+
+🧮 Génération automatique de la grille
+Cliquez sur "Auto Grid" pour générer automatiquement une grille optimale en fonction de l’image et de sa luminosité.
+
+📦 Placement des produits
+Sélectionnez un produit via le menu déroulant.
+
+Cliquez sur la grille pour placer le produit à la position souhaitée (colonne, ligne).
+
+💾 Sauvegarde automatique et manuelle
+Toute action importante entraîne une sauvegarde automatique du projet dans le dossier projets/.
+
+Vous pouvez aussi sauvegarder manuellement avec le bouton "Sauvegarder".
+
+📂 Chargement d’un projet existant
+Cliquez sur "Charger un projet" pour rouvrir un projet précédemment enregistré.
+
+Le plan, la grille et les produits seront restaurés.
+
+🗑️ Suppression de projet
+Cliquez sur "Supprimer un projet" pour effacer définitivement un dossier de projet (confirmation requise).
