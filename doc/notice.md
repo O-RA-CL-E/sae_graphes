@@ -103,7 +103,7 @@ python app2_parcours_courses/main.py
 ### 3️⃣ **Générer une liste de courses aléatoire (facultatif)**
 - cliquez sur le bouton **"Générer une liste de courses aléatoire"**
 
-### 4️⃣ **tracer le chemin le plus court**
+### 4️⃣ **Tracer le chemin le plus court**
 - pour tracer le chemin le plus court, cliquez sur le bouton **"Tracer le chemin le plus court"**
 
 ### 5️⃣ **Suppression de produit dans la liste de cours**
