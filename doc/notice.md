@@ -78,3 +78,33 @@ Chaque projet contient :
 - Plan du magasin (copie de l’image source)
 
 ✅ **Application stable, ergonomique, sécurisée et prête pour l’exploitation**.
+
+## 🚀 Lancement de l’application 2
+
+1. Lancez l’application avec :
+```bash
+python app2_parcours_courses/main.py
+```
+
+## 🔑 Connexion
+
+- Lors du lancement, entrez le mot de passe requis :  
+**`root`**
+
+## 🛠 Fonctionnalités principales
+
+### 1️⃣ **Charger le magasin**
+- Cliquez sur **"Charger un magasin"**.
+- Sélectionnez un fichier projet existant.
+
+### 2️⃣ **mettre des produits dans la liste de courses**
+- double cliquer sur les articles qui sont en dessous du plan du magasin
+
+### 3️⃣ **Générer une liste de courses aléatoire (facultatif)**
+- cliquez sur le bouton **"Générer une liste de courses aléatoire"**
+
+### 4️⃣ **tracer le chemin le plus court**
+- pour tracer le chemin le plus court, cliquez sur le bouton **"Tracer le chemin le plus court"**
+
+### 5️⃣ **Suppression de produit dans la liste de cours**
+- pour supprimer un produit de la liste de cours, il faut double-cliquer sur le produit que vous voulez enlever dans la liste de courses
