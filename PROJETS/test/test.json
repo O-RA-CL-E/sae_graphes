@@ -1,0 +1,46 @@
+{
+    "project_name": "test",
+    "author": "mael",
+    "address": "t",
+    "creation_date": "2025-06-12 19:51:14",
+    "image_path": "test\\plan.jpg",
+    "grid_size": 50,
+    "grid_origin": [
+        0,
+        0
+    ],
+    "nb_cols": 45,
+    "nb_rows": 34,
+    "products": [
+        {
+            "label": "Ail",
+            "col": 1,
+            "row": 5
+        },
+        {
+            "label": "Petits pois",
+            "col": 7,
+            "row": 4
+        },
+        {
+            "label": "Haricots",
+            "col": 28,
+            "row": 6
+        },
+        {
+            "label": "Beurre de cacahu\u00e8te",
+            "col": 6,
+            "row": 20
+        },
+        {
+            "label": "Rasoirs",
+            "col": 1,
+            "row": 21
+        },
+        {
+            "label": "Graines",
+            "col": 30,
+            "row": 19
+        }
+    ]
+}
