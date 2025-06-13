@@ -1,17 +1,33 @@
-pycache/
+# Python
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-venv/
-.env/
-env/
+*.egg-info/
+dist/
+build/
+.env
 .venv/
-*.swp
-*.swo
-*.bak
-*.tmp
+venv/
+ENV/
+env/
+
+# PyQt5 designer files (si jamais utilisés)
+*.ui
+*.qrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
 *.log
+
+# Projets sauvegardés (optionnel si tu ne veux pas versionner les projets sauvegardés)
+projets/
+
+# JetBrains (PyCharm)
+.idea/
+
+# VSCode
 .vscode/
-.cache/
-.tox/
-.pytest_cache/
