@@ -24,7 +24,8 @@ class ProjectModel:
         self.grid_origin = (origin_x, origin_y)
 
     def add_product(self, label, col, row):
-        self.products.append({"label": label, "col": col, "row": row})
+        if not any(p for p in self.products if p["col"] == col and p["row"] == row):
+            self.products.append({"label": label, "col": col, "row": row})
 
     def get_products(self):
         return self.products
